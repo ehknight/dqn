@@ -6,13 +6,10 @@ Dense = tf.layers.Dense
 
 class QNetwork(object):
     def __init__(self, inps, outs, hidden_sizes, str_optim,
-            discount_factor=1.0, activation=tf.nn.tanh, lr=0.001, damping=0.01,
-            cov_decay=0.95):
+            discount_factor=1.0, activation=tf.nn.relu, lr=0.001):
         self.sess = tf.Session() # create new tf session
         self.discount_factor = discount_factor
         self.lr = lr
-        self.damping = damping
-        self.cov_decay = cov_decay
 
         self.state_var = tf.placeholder('float32', [None, inps])
         previous_layer_out = self.state_var
@@ -28,15 +25,9 @@ class QNetwork(object):
                     kernel_initializer=tf.random_normal_initializer())
             preactivated = layer(previous_layer_out)
             if layer_activation is None:
-                print 'NO ACTIVATION'
                 activated = preactivated
             else:
-                print 'YES ACTIVATION'
                 activated = layer_activation(preactivated)
-            to_add = {'ws': layer.kernel, 'bs':layer.bias,
-                    'prev_outs': previous_layer_out, 'preacs': preactivated}
-            print to_add
-            network_params.append(to_add)
             previous_layer_out = activated
 
         self.q_pred_var = activated
