@@ -41,6 +41,7 @@ def main(env_name, optim, hiddens, eps_decay, memory_length, epochs, batch_size)
                 pass
             policy.update_epsilon()
             epoch_reward += reward
+            state = next_state
             if done: break
 
         print 'Episode {}/{} | Total reward: {} | Epsilon: {:.4f}'\
